@@ -1,0 +1,77 @@
+10
+
+dir
+2169
+svn://powhegbox.mib.infn.it/trunk/POWHEG-BOX/MadGraphStuff/MadGraph_POWHEG/Template
+svn://powhegbox.mib.infn.it
+
+
+
+2012-07-27T16:15:02.695358Z
+2053
+oleari
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+9e129b38-c2c0-4eec-9301-dc54fda404de
+
+TemplateVersion.txt
+file
+
+
+
+
+2013-01-30T22:30:21.000000Z
+0a0e3c111b329648f9ec6d8906462f35
+2011-05-23T17:38:20.737366Z
+569
+rikkert
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6
+
+Source
+dir
+
+SubProcesses
+dir
+
+lib
+dir
+
+bin
+dir
+
+Cards
+dir
+

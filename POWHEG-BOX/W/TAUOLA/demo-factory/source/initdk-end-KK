@@ -1,0 +1,52 @@
+      GFERMI = xpar(32)
+      IF (XPAR(ITAUXPAR+100+1).GT.-1D0) THEN
+C initialization form KK
+        CCABIB = XPAR(ITAUXPAR+7)
+        GV     = XPAR(ITAUXPAR+8)
+        GA     = XPAR(ITAUXPAR+9)
+
+        BRA1   = XPAR(ITAUXPAR+10)
+        BRKS   = XPAR(ITAUXPAR+11)
+        BRK0   = XPAR(ITAUXPAR+12)
+        BRK0B  = XPAR(ITAUXPAR+13)
+        DO K=1,NCHAN
+         GAMPRT(K)=XPAR(ITAUXPAR+100+K)
+        ENDDO
+      ENDIF
+* ZW 13.04.89 HERE WAS AN ERROR
+      SCABIB = SQRT(1.-CCABIB**2)
+      PI =4.*ATAN(1.)
+      GAMEL  = GFERMI**2*AMTAU**5/(192*PI**3)
+*
+*      CALL DEXAY(-1,pol1)
+*
+* PRINTOUTS FOR KK version
+
+      SUM=0
+      DO K=1,NCHAN
+       SUM=SUM+GAMPRT(K)
+      ENDDO
+
+      
+      WRITE(iout,bxope)
+      WRITE(iout,bxtxt) ' TAUOLA Initialization SUBROUTINE INITDK:    '
+      WRITE(iout,bxtxt) ' Adopted to read from KK                     '
+      WRITE(iout,bxtxt) '                      '
+      WRITE(iout,bxtxt) ' Choice Probability      --     Decay Channel'
+      DO K=1,7      
+      WRITE(iout,bxINIT) GAMPRT(K)/SUM,    OLDNAMES(K),'****','***'
+      ENDDO
+      DO K=8,7+NMODE      
+      WRITE(iout,bxINIT) GAMPRT(K)/SUM,     NAMES(K-7),'****','***'
+      ENDDO
+      WRITE(iout,bxtxt) ' In addition:'
+      WRITE(iout,bxINIT) GV,    'Vector W-tau-nu coupl.     ','****','***'
+      WRITE(iout,bxINIT) GA,    'Axial  W-tau-nu coupl.     ','****','***'
+      WRITE(iout,bxINIT) GFERMI,'Fermi Coupling             ','****','***'
+      WRITE(iout,bxINIT) CCABIB,'cabibo angle               ','****','***'
+      WRITE(iout,bxINIT) BRA1,  'a1 br ratio (massless)     ','****','***'
+      WRITE(iout,bxINIT) BRKS,  'K* br ratio (massless)     ','****','***'
+      WRITE(iout,bxclo)
+            
+      RETURN
+      END

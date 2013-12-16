@@ -1,0 +1,12 @@
+      SUBROUTINE INITDK(ITAUXPAR,xpar)
+* ----------------------------------------------------------------------
+*     INITIALISATION OF TAU DECAY PARAMETERS  and routines
+*
+*     called by : KORALZ
+* ----------------------------------------------------------------------
+      INCLUDE "BXformat.h"
+      INTEGER   INUT,IOUT
+      COMMON /INOUT/  
+     $     INUT,         ! Input  unit  number (not used)
+     $     IOUT          ! Ounput unit  number
+      REAL*8 xpar(*)

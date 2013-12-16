@@ -1,0 +1,15 @@
+
+      SUBROUTINE INIPHY(XK00)
+* ----------------------------------------------------------------------
+*     INITIALISATION OF PARAMETERS
+*     USED IN QED and/or GSW ROUTINES
+* ----------------------------------------------------------------------
+      COMMON / QEDPRM /ALFINV,ALFPI,XK0
+      REAL*8           ALFINV,ALFPI,XK0
+      REAL*8 PI8,XK00
+*
+      PI8    = 4.D0*DATAN(1.D0)
+      ALFINV = 137.03604D0
+      ALFPI  = 1D0/(ALFINV*PI8)
+      XK0=XK00
+      END

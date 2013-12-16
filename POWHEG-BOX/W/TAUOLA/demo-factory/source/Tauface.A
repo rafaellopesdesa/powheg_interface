@@ -1,0 +1,68 @@
+*/////////////////////////////////////////////////////////////////////////////////////
+*//                                                                                 //
+*//  !!!!!!! WARNING!!!!!   This source is agressive !!!!                           //
+*//                                                                                 //
+*//  Due to short common block names it  owerwrites variables in other parts        //
+*//  of the code.                                                                   //
+*//                                                                                 //
+*//  One should add suffix c_Taul_ to names of all commons as soon as possible!!!!  //
+*//                                                                                 //
+*/////////////////////////////////////////////////////////////////////////////////////
+
+*/////////////////////////////////////////////////////////////////////////////////////
+*//                                                                                 //
+*//   Standard Tauola interface/initialization routines of functionality exactly    //
+*//   as in Tauola CPC  but input is partially from xpar(*) matrix                  //
+*//   ITAUXPAR is for indirect adressing                                            //
+*//                                                                                 //
+*/////////////////////////////////////////////////////////////////////////////////////
+
+
+      SUBROUTINE INIETC(ITAUXPAR,xpar)
+      INCLUDE "BXformat.h"
+      REAL*8 xpar(*)
+      INTEGER   INUT,IOUT
+      COMMON /INOUT/  
+     $     INUT,         ! Input  unit  number (not used)
+     $     IOUT          ! Ounput unit  number
+      COMMON / IDFC  / IDFF
+      COMMON / TAURAD / XK0DEC,ITDKRC
+      DOUBLE PRECISION            XK0DEC
+      COMMON / JAKI   /  JAK1,JAK2,JAKP,JAKM,KTOM
+* Note: I dont see KeyA1=2,3 realy implemented in the code SJ. ??????
+      INTEGER  KeyA1
+      COMMON /TESTA1/
+     $     KeyA1           ! Special switch for tests of dGamma/dQ**2 in a1 decay
+* KeyA1=1 constant width of a1 and rho
+* KeyA1=2 free choice of rho propagator (defined in function FPIK)
+*         and free choice of a1 mass and width. function g(Q**2)
+*         (see formula 3.48 in Comp. Phys. Comm. 64 (1991) 275)
+*         hard coded both in Monte Carlo and in testing distribution.
+* KeyA1=3 function g(Q**2) hardcoded in the Monte Carlo
+*         (it is timy to calculate!), but appropriately adjusted in testing distribution.
+      SAVE
+       idff    = xpar(ITAUXPAR+3)        ! Lund identifier for first tau (15 for  tau-)
+C XK0 for tau decays.
+       xk0dec  = xpar(ITAUXPAR+5)        ! IR-cut for QED rad. in leptonic decays
+C radiative correction switch in tau --> e (mu) decays !
+       itdkRC  = xpar(ITAUXPAR+4)        ! QED rad. in leptonic decays
+C switches of tau+ tau- decay modes !!
+       Jak1            = xpar(ITAUXPAR+1)   ! Decay Mask for first tau
+       Jak2            = xpar(ITAUXPAR+2)   ! Decay Mask for second tau
+C output file number for TAUOLA
+       IOUT    = xpar(4)
+C  KeyA1 is used for formfactors actually not in use
+      KeyA1   = xpar(ITAUXPAR+6)        ! Type of a1 current
+
+        WRITE(iout,bxope)
+        WRITE(iout,bxtxt) ' Parameters passed from KK  to Tauola:   '
+        WRITE(iout,bxl1i) Jak1,      'dec. type 1-st tau  ','Jak1  ','t01'
+        WRITE(iout,bxl1i) Jak2,      'dec. type 2-nd tau  ','Jak2  ','t02'
+        WRITE(iout,bxl1i) KeyA1,     'current type a1 dec.','KeyA1 ','t03'
+        WRITE(iout,bxl1i) idff,      'PDG id 1-st tau     ','idff  ','t04'
+        WRITE(iout,bxl1i) itdkRC,    'R.c. switch lept dec','itdkRC','t05'
+        WRITE(iout,bxl1g) xk0dec,    'IR-cut for lept r.c.','xk0dec','t06'
+        WRITE(iout,bxclo)
+
+      end
+

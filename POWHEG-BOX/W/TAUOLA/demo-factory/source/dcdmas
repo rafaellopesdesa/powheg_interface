@@ -1,0 +1,229 @@
+      FUNCTION DCDMAS(IDENT)
+      COMMON / PARMAS / AMTAU,AMNUTA,AMEL,AMNUE,AMMU,AMNUMU
+     *                 ,AMPIZ,AMPI,AMRO,GAMRO,AMA1,GAMA1
+     *                 ,AMK,AMKZ,AMKST,GAMKST
+*
+      REAL*4            AMTAU,AMNUTA,AMEL,AMNUE,AMMU,AMNUMU
+     *                 ,AMPIZ,AMPI,AMRO,GAMRO,AMA1,GAMA1
+     *                 ,AMK,AMKZ,AMKST,GAMKST
+      IF      (IDENT.EQ. 1) THEN
+        APKMAS=AMPI
+      ELSEIF  (IDENT.EQ.-1) THEN
+        APKMAS=AMPI
+      ELSEIF  (IDENT.EQ. 2) THEN
+        APKMAS=AMPIZ
+      ELSEIF  (IDENT.EQ.-2) THEN
+        APKMAS=AMPIZ
+      ELSEIF  (IDENT.EQ. 3) THEN
+        APKMAS=AMK
+      ELSEIF  (IDENT.EQ.-3) THEN
+        APKMAS=AMK
+      ELSEIF  (IDENT.EQ. 4) THEN
+        APKMAS=AMKZ
+      ELSEIF  (IDENT.EQ.-4) THEN
+        APKMAS=AMKZ
+      ELSEIF  (IDENT.EQ. 8) THEN
+        APKMAS=0.0001
+      ELSEIF  (IDENT.EQ.-8) THEN
+        APKMAS=0.0001
+      ELSEIF  (IDENT.EQ. 9) THEN
+        APKMAS=0.5488
+      ELSEIF  (IDENT.EQ.-9) THEN
+        APKMAS=0.5488
+      ELSE
+        PRINT *, 'STOP IN APKMAS, WRONG IDENT=',IDENT
+        STOP
+      ENDIF
+      DCDMAS=APKMAS
+      END
+      FUNCTION LUNPIK(ID,ISGN)
+      COMMON / TAUKLE / BRA1,BRK0,BRK0B,BRKS
+      REAL*4            BRA1,BRK0,BRK0B,BRKS
+      REAL*4 XIO(1)
+      IDENT=ID*ISGN
+#if defined (ALEPH)
+      IF      (IDENT.EQ. 1) THEN
+        IPKDEF= 211
+      ELSEIF  (IDENT.EQ.-1) THEN
+        IPKDEF=-211
+      ELSEIF  (IDENT.EQ. 2) THEN
+        IPKDEF= 111
+      ELSEIF  (IDENT.EQ.-2) THEN
+        IPKDEF= 111
+      ELSEIF  (IDENT.EQ. 3) THEN
+        IPKDEF= 321
+      ELSEIF  (IDENT.EQ.-3) THEN
+        IPKDEF=-321
+#else
+      IF      (IDENT.EQ. 1) THEN
+        IPKDEF=-211
+      ELSEIF  (IDENT.EQ.-1) THEN
+        IPKDEF= 211
+      ELSEIF  (IDENT.EQ. 2) THEN
+        IPKDEF=111
+      ELSEIF  (IDENT.EQ.-2) THEN
+        IPKDEF=111
+      ELSEIF  (IDENT.EQ. 3) THEN
+        IPKDEF=-321
+      ELSEIF  (IDENT.EQ.-3) THEN
+        IPKDEF= 321
+#endif
+      ELSEIF  (IDENT.EQ. 4) THEN
+*
+* K0 --> K0_LONG (IS 130) / K0_SHORT (IS 310) = 1/1
+        CALL RANMAR(XIO,1)
+        IF (XIO(1).GT.BRK0) THEN
+          IPKDEF= 130
+        ELSE
+          IPKDEF= 310
+        ENDIF
+      ELSEIF  (IDENT.EQ.-4) THEN
+*
+* K0B--> K0_LONG (IS 130) / K0_SHORT (IS 310) = 1/1
+        CALL RANMAR(XIO,1)
+        IF (XIO(1).GT.BRK0B) THEN
+          IPKDEF= 130
+        ELSE
+          IPKDEF= 310
+        ENDIF
+      ELSEIF  (IDENT.EQ. 8) THEN
+        IPKDEF= 22
+      ELSEIF  (IDENT.EQ.-8) THEN
+        IPKDEF= 22
+      ELSEIF  (IDENT.EQ. 9) THEN
+        IPKDEF= 221
+      ELSEIF  (IDENT.EQ.-9) THEN
+        IPKDEF= 221
+      ELSE
+        PRINT *, 'STOP IN IPKDEF, WRONG IDENT=',IDENT
+        STOP
+      ENDIF
+      LUNPIK=IPKDEF
+      END
+
+
+#if defined (CLEO)
+
+      SUBROUTINE TAURDF(KTO)
+C THIS ROUTINE CAN BE CALLED BEFORE ANY TAU+ OR TAU- EVENT IS GENERATED
+C IT CAN BE USED TO GENERATE TAU+ AND TAU- SAMPLES OF DIFFERENT
+C CONTENTS
+      COMMON / TAUKLE / BRA1,BRK0,BRK0B,BRKS
+      REAL*4            BRA1,BRK0,BRK0B,BRKS
+      COMMON / TAUBRA / GAMPRT(30),JLIST(30),NCHAN
+      IF (KTO.EQ.1) THEN
+C     ==================
+C AJWMOD: Set the BRs for (A1+ -> rho+ pi0) and (K*+ -> K0 pi+)
+      BRA1 = PKORB(4,1)
+      BRKS = PKORB(4,3)
+      BRK0  = PKORB(4,5)
+      BRK0B  = PKORB(4,6)
+      ELSE
+C     ====
+C AJWMOD: Set the BRs for (A1+ -> rho+ pi0) and (K*+ -> K0 pi+)
+      BRA1 = PKORB(4,2)
+      BRKS = PKORB(4,4)
+      BRK0  = PKORB(4,5)
+      BRK0B  = PKORB(4,6)
+      ENDIF
+C     =====
+      END
+#else
+
+      SUBROUTINE TAURDF(KTO)
+* THIS ROUTINE CAN BE CALLED BEFORE ANY TAU+ OR TAU- EVENT IS GENERATED
+* IT CAN BE USED TO GENERATE TAU+ AND TAU- SAMPLES OF DIFFERENT
+* CONTENTS
+      COMMON / TAUKLE / BRA1,BRK0,BRK0B,BRKS
+      REAL*4            BRA1,BRK0,BRK0B,BRKS
+      COMMON / TAUBRA / GAMPRT(30),JLIST(30),NCHAN
+      IF (KTO.EQ.1) THEN
+*     ==================
+* LIST OF BRANCHING RATIOS
+      NCHAN = 19
+      DO 1 I = 1,30
+      IF (I.LE.NCHAN) THEN
+        JLIST(I) = I
+        IF(I.EQ. 1) GAMPRT(I) = .0000
+        IF(I.EQ. 2) GAMPRT(I) = .0000
+        IF(I.EQ. 3) GAMPRT(I) = .0000
+        IF(I.EQ. 4) GAMPRT(I) = .0000
+        IF(I.EQ. 5) GAMPRT(I) = .0000
+        IF(I.EQ. 6) GAMPRT(I) = .0000
+        IF(I.EQ. 7) GAMPRT(I) = .0000
+        IF(I.EQ. 8) GAMPRT(I) = 1.0000
+        IF(I.EQ. 9) GAMPRT(I) = 1.0000
+        IF(I.EQ.10) GAMPRT(I) = 1.0000
+        IF(I.EQ.11) GAMPRT(I) = 1.0000
+        IF(I.EQ.12) GAMPRT(I) = 1.0000
+        IF(I.EQ.13) GAMPRT(I) = 1.0000
+        IF(I.EQ.14) GAMPRT(I) = 1.0000
+        IF(I.EQ.15) GAMPRT(I) = 1.0000
+        IF(I.EQ.16) GAMPRT(I) = 1.0000
+        IF(I.EQ.17) GAMPRT(I) = 1.0000
+        IF(I.EQ.18) GAMPRT(I) = 1.0000
+        IF(I.EQ.19) GAMPRT(I) = 1.0000
+      ELSE
+        JLIST(I) = 0
+        GAMPRT(I) = 0.
+      ENDIF
+   1  CONTINUE
+* --- COEFFICIENTS TO FIX RATIO OF:
+* --- A1 3CHARGED/ A1 1CHARGED 2 NEUTRALS MATRIX ELEMENTS (MASLESS LIM.)
+* --- PROBABILITY OF K0 TO BE KS
+* --- PROBABILITY OF K0B TO BE KS
+* --- RATIO OF COEFFICIENTS FOR K*--> K0 PI-
+* --- ALL COEFFICENTS SHOULD BE IN THE RANGE (0.0,1.0)
+* --- THEY MEANING IS PROBABILITY OF THE FIRST CHOICE ONLY IF ONE
+* --- NEGLECTS MASS-PHASE SPACE EFFECTS
+      BRA1=0.5
+      BRK0=0.5
+      BRK0B=0.5
+      BRKS=0.6667
+      ELSE
+*     ====
+* LIST OF BRANCHING RATIOS
+      NCHAN = 19
+      DO 2 I = 1,30
+      IF (I.LE.NCHAN) THEN
+        JLIST(I) = I
+        IF(I.EQ. 1) GAMPRT(I) = .0000
+        IF(I.EQ. 2) GAMPRT(I) = .0000
+        IF(I.EQ. 3) GAMPRT(I) = .0000
+        IF(I.EQ. 4) GAMPRT(I) = .0000
+        IF(I.EQ. 5) GAMPRT(I) = .0000
+        IF(I.EQ. 6) GAMPRT(I) = .0000
+        IF(I.EQ. 7) GAMPRT(I) = .0000
+        IF(I.EQ. 8) GAMPRT(I) = 1.0000
+        IF(I.EQ. 9) GAMPRT(I) = 1.0000
+        IF(I.EQ.10) GAMPRT(I) = 1.0000
+        IF(I.EQ.11) GAMPRT(I) = 1.0000
+        IF(I.EQ.12) GAMPRT(I) = 1.0000
+        IF(I.EQ.13) GAMPRT(I) = 1.0000
+        IF(I.EQ.14) GAMPRT(I) = 1.0000
+        IF(I.EQ.15) GAMPRT(I) = 1.0000
+        IF(I.EQ.16) GAMPRT(I) = 1.0000
+        IF(I.EQ.17) GAMPRT(I) = 1.0000
+        IF(I.EQ.18) GAMPRT(I) = 1.0000
+        IF(I.EQ.19) GAMPRT(I) = 1.0000
+      ELSE
+        JLIST(I) = 0
+        GAMPRT(I) = 0.
+      ENDIF
+   2  CONTINUE
+* --- COEFFICIENTS TO FIX RATIO OF:
+* --- A1 3CHARGED/ A1 1CHARGED 2 NEUTRALS MATRIX ELEMENTS (MASLESS LIM.)
+* --- PROBABILITY OF K0 TO BE KS
+* --- PROBABILITY OF K0B TO BE KS
+* --- RATIO OF COEFFICIENTS FOR K*--> K0 PI-
+* --- ALL COEFFICENTS SHOULD BE IN THE RANGE (0.0,1.0)
+* --- THEY MEANING IS PROBABILITY OF THE FIRST CHOICE ONLY IF ONE
+* --- NEGLECTS MASS-PHASE SPACE EFFECTS
+      BRA1=0.5
+      BRK0=0.5
+      BRK0B=0.5
+      BRKS=0.6667
+      ENDIF
+*     =====
+      END
+#endif

@@ -1,0 +1,9 @@
+* ZW 13.04.89 HERE WAS AN ERROR
+      SCABIB = SQRT(1.-CCABIB**2)
+      PI =4.*ATAN(1.)
+      GAMEL  = GFERMI**2*AMTAU**5/(192*PI**3)
+*
+       CALL DEXAY(-1,POL1)
+*
+      RETURN
+      END

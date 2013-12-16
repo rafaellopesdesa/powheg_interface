@@ -1,0 +1,29 @@
+It is often necessary to change some of the tauola input parameters like branching
+ratios tau mass etc etc. It ic convenient to have it done centrally.
+The purpose of this directory is exactly that.
+Here one can create the .F files for interfaces of Tauola to different programs 
+out of singly defined blocks. More precisely:
+
+KK:             prod/Tauface.F             --> ../tauola-F/tauface-KK-F/Tauface.F
+demo-jetset:    prod/tauola_photos_ini.F   --> ../tauola-F/jetset-F/tauola_photos_ini.F
+demo:           prod/taumain.F             --> ../tauola-F/standalone-F/taumain.F
+
+where the arrows are pointing to the final adresses of the files.
+
+How to use?
+===========
+
+1)The parts of the routines have to be updated in directory ./source by hand.
+  The parts wich should rather not be modified are write protected.
+2)With the help of script 'klej' files  prod/Tauface.F  prod/tauola_photos_ini.F prod/taumain.F
+  will be created. Automatic check -- comparison with the archive versions stored in
+  directory ./back will be also performed.
+
+3) Finally commands:
+
+cp             prod/Tauface.F              ../tauola-F/tauface-KK-F/Tauface.F
+cp             prod/tauola_photos_ini.F    ../tauola-F/jetset-F/tauola_photos_ini.F
+cp             prod/taumain.F              ../tauola-F/standalone-F/taumain.F
+
+place all where it is needed.
+

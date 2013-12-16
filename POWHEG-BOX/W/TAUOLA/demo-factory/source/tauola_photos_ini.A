@@ -1,0 +1,97 @@
+C this file is created by hand from taumain.F
+C actions: Remove routines: TAUDEM DECTES TAUFIL FILHEP
+C add:     INIETC will not necesarily work fine ... 
+C replace  TRALO4 
+C rename INIPHY to INIPHX
+
+      SUBROUTINE INIETC(jakk1,jakk2,itd,ifpho)
+      COMMON / IDFC  / IDFF
+      COMMON / TAURAD / XK0DEC,ITDKRC
+      DOUBLE PRECISION            XK0DEC
+      COMMON / JAKI   /  JAK1,JAK2,JAKP,JAKM,KTOM
+      COMMON /PHOACT/ IFPHOT
+      SAVE
+C KTO=1 will denote tau+, thus :: IDFF=-15
+          IDFF=-15
+C XK0 for tau decays.
+          XK0DEC=0.01
+C radiative correction switch in tau --> e (mu) decays !
+          ITDKRC=itd
+C switches of tau+ tau- decay modes !!
+          JAK1=jakk1
+          JAK2=jakk2
+C photos activation switch
+          IFPHOT=IFPHO
+      end
+
+      SUBROUTINE TRALO4(KTOS,PHOI,PHOF,AM)
+!! Corrected 11.10.96 (ZW) tralor for KORALW.
+!! better treatment is to  cascade from tau rest-frame through W
+!! restframe down to LAB. 
+      COMMON / MOMDEC / Q1,Q2,P1,P2,P3,P4
+      COMMON /TRALID/ idtra
+      double precision Q1(4),Q2(4),P1(4),P2(4),P3(4),P4(4),P1QQ(4),P2QQ(4)
+      double precision PIN(4),POUT(4),PBST(4),PBS1(4),QQ(4),PI
+      double precision THET,PHI,EXE
+      REAL*4 PHOI(4),PHOF(4)
+      SAVE
+      DATA PI /3.141592653589793238462643D0/
+      AM=SQRT(ABS
+     $   (PHOI(4)**2-PHOI(3)**2-PHOI(2)**2-PHOI(1)**2))
+      idtra=KTOS
+      DO K=1,4
+       PIN(K)=PHOI(K)
+       PHOF(K)=PHOI(K)
+      ENDDO
+!      write(*,*) idtra
+      IF    (idtra.EQ.1) THEN
+        DO K=1,4
+         PBST(K)=P1(K)
+         QQ(K)=Q1(K)
+        ENDDO
+      ELSEIF(idtra.EQ.2) THEN
+        DO K=1,4
+         PBST(K)=P2(K)
+         QQ(K)=Q1(K)
+        ENDDO
+      ELSEIF(idtra.EQ.3) THEN
+        DO K=1,4
+         PBST(K)=P3(K)
+         QQ(K)=Q2(K)
+        ENDDO
+      ELSE
+        DO K=1,4
+         PBST(K)=P4(K)
+         QQ(K)=Q2(K)
+        ENDDO
+      ENDIF
+
+
+
+        CALL BOSTDQ(1,QQ,PBST,PBST)
+        CALL BOSTDQ(1,QQ,P1,P1QQ)
+        CALL BOSTDQ(1,QQ,P2,P2QQ)
+        PBS1(4)=PBST(4)
+        PBS1(3)=SQRT(PBST(3)**2+PBST(2)**2+PBST(1)**2)
+        PBS1(2)=0D0
+        PBS1(1)=0D0 
+        EXE=(PBS1(4)+PBS1(3))/DSQRT(PBS1(4)**2-PBS1(3)**2)
+C for KTOS=1 boost is antiparallel to 4-momentum of P2. 
+C restframes of tau+ tau- and 'first' frame of 'higgs' are all connected
+C by boosts along z axis
+       IF(KTOS.EQ.1)  EXE=(PBS1(4)-PBS1(3))/DSQRT(PBS1(4)**2-PBS1(3)**2)
+        CALL BOSTD3(EXE,PIN,POUT)
+
+C once in Z/gamma/Higgs rest frame we control further kinematics by P2QQ for KTOS=1,2
+        THET=ACOS(P2QQ(3)/SQRT(P2QQ(3)**2+P2QQ(2)**2+P2QQ(1)**2))
+        PHI=0D0
+        PHI=ACOS(P2QQ(1)/SQRT(P2QQ(2)**2+P2QQ(1)**2))
+        IF(P2QQ(2).LT.0D0) PHI=2*PI-PHI
+
+        CALL ROTPOX(THET,PHI,POUT)
+        CALL BOSTDQ(-1,QQ,POUT,POUT)
+      DO K=1,4
+       PHOF(K)=POUT(K)
+      ENDDO
+      END
+

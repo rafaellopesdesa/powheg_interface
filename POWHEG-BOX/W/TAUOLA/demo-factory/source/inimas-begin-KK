@@ -1,0 +1,32 @@
+
+      SUBROUTINE INIMAS(ITAUXPAR,xpar)
+* ----------------------------------------------------------------------
+*     INITIALISATION OF MASSES
+*
+*     called by : KORALZ
+* ----------------------------------------------------------------------
+      INCLUDE "BXformat.h"
+      INTEGER   INUT,IOUT
+      COMMON /INOUT/  
+     $     INUT,         ! Input  unit  number (not used)
+     $     IOUT          ! Ounput unit  number
+      REAL*8 xpar(*)
+      COMMON / PARMAS / AMTAU,AMNUTA,AMEL,AMNUE,AMMU,AMNUMU
+     *                 ,AMPIZ,AMPI,AMRO,GAMRO,AMA1,GAMA1
+     *                 ,AMK,AMKZ,AMKST,GAMKST
+*
+      REAL*4            AMTAU,AMNUTA,AMEL,AMNUE,AMMU,AMNUMU
+     *                 ,AMPIZ,AMPI,AMRO,GAMRO,AMA1,GAMA1
+     *                 ,AMK,AMKZ,AMKST,GAMKST
+      CHARACTER*80 bxINIT
+      PARAMETER (
+     $  bxINIT ='(1x,1h*,g17.8,            16x, a31,a4,a4, 1x,1h*)'
+     $ )
+*
+* IN-COMING / OUT-GOING  FERMION MASSES
+      AMTAU  = xpar(656)
+      AMNUTA = 0.010
+      AMEL   = xpar(616)
+      AMNUE  = 0.0
+      AMMU   = xpar(636)
+      AMNUMU = 0.0

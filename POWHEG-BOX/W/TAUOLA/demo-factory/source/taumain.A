@@ -1,0 +1,191 @@
+      PROGRAM TAUDEM
+C     **************
+C NOTE THAT THE ROUTINES ARE NOT LIKE IN CPC DECK THIS IS HISTORICAL !!
+C=======================================================================
+C====================== DECTES    : TEST OF TAU DECAY LIBRARY===========
+C====================== KTORY = 1 : INTERFACE OF KORAL-Z TYPE ==========
+C====================== KTORY = 2 : INTERFACE OF KORAL-B TYPE =========
+C=======================================================================
+C     COMMON  /PAWC/ BLAN(10000)
+      COMMON  / / BLAN(10000)
+      CHARACTER*7 DNAME
+      COMMON / INOUT / INUT,IOUT
+      DNAME='KKPI'
+!      CALL GLIMIT(20000)
+!      CALL GOUTPU(16)
+      INUT=5
+      IOUT=6
+      OPEN(IOUT,FILE="./tauola.output")
+       OPEN(INUT,FILE="./dane.dat")
+      KTORY=1
+      CALL DECTES(KTORY)
+      KTORY=2
+      CALL DECTES(KTORY)
+      END
+      SUBROUTINE DECTES(KTORY)
+C     ************************
+      REAL POL(4)
+      DOUBLE PRECISION HH(4)
+C SWITCHES FOR TAUOLA;
+      COMMON / JAKI   /  JAK1,JAK2,JAKP,JAKM,KTOM
+      COMMON / IDFC  / IDFF
+C I/O UNITS  NUMBERS
+      COMMON / INOUT /  INUT,IOUT
+C LUND TYPE IDENTIFIER FOR A1
+      COMMON / IDPART / IA1
+C /PTAU/ IS USED IN ROUTINE TRALO4
+      COMMON /PTAU/ PTAU
+      COMMON / TAURAD / XK0DEC,ITDKRC
+      REAL*8            XK0DEC
+      COMMON /TESTA1/ KEYA1
+C special switch for tests of dGamma/dQ**2 in a1 decay
+C KEYA1=1 constant width of a1 and rho
+C KEYA1=2 free choice of rho propagator (defined in function FPIK)
+C         and free choice of a1 mass and width. function g(Q**2)
+C         (see formula 3.48 in Comp. Phys. Comm. 64 (1991) 275)
+C         hard coded both in Monte Carlo and in testing distribution.
+C KEYA1=3 function g(Q**2) hardcoded in the Monte Carlo
+C         (it is timy to calculate!), but appropriately adjusted in
+C         testing distribution.
+C-----------------------------------------------------------------------
+C          INITIALIZATION
+C-----------------------------------------------------------------------
+C======================================
+      NINP=INUT
+      NOUT=IOUT
+ 3000 FORMAT(A80)
+ 3001 FORMAT(8I2)
+ 3002 FORMAT(I10)
+ 3003 FORMAT(F10.0)
+      IF (KTORY.EQ.1) THEN
+      READ( NINP,3000) TESTIT
+      WRITE(NOUT,3000) TESTIT
+      READ( NINP,3001) KAT1,KAT2,KAT3,KAT4,KAT5,KAT6
+      READ( NINP,3002) NEVT,JAK1,JAK2,ITDKRC
+      READ( NINP,3003) PTAU,XK0DEC
+      ENDIF
+C======================================
+C control output
+      WRITE(NOUT,'(6A6/6I6)')
+     $ 'KAT1','KAT2','KAT3','KAT4','KAT5','KAT6',
+     $  KAT1 , KAT2 , KAT3 , KAT4 , KAT5 , KAT6
+      WRITE(NOUT,'(4A12/4I12)')
+     $  'NEVT','JAK1','JAK2','ITDKRC',
+     $   NEVT,  JAK1 , JAK2 , ITDKRC
+      WRITE(NOUT,'(2A12/2F12.6)')
+     $ 'PTAU','XK0DEC',
+     $  PTAU , XK0DEC
+C======================================
+      JAK=0
+C      JAK1=5
+C      JAK2=5
+C LUND IDENTIFIER (FOR TAU+) -15
+      IF (KTORY.EQ.1) THEN
+        IDFF=-15
+      ELSE
+        IDFF= 15
+      ENDIF
+C KTO=1 DENOTES TAU DEFINED BY IDFF (I.E. TAU+)
+C KTO=2 DENOTES THE OPPOSITE        (I.E. TAU-)
+      KTO=2
+      IF (KTO.NE.2) THEN
+        PRINT *, 'for the sake of these tests KTO has to be 2'
+        PRINT *, 'to change tau- to tau+ change IDFF from -15 to 15'
+        STOP
+      ENDIF
+C TAU POLARIZATION IN ITS RESTFRAME;
+      POL(1)=0.
+      POL(2)=0.
+      POL(3)=.9
+C TAU MOMENTUM IN GEV;
+C      PTAU=CMSENE/2.D0
+C NUMBER OF EVENTS TO BE GENERATED;
+      NEVTES=10
+      NEVTES=NEVT
+      PRINT *, 'NEVTES= ',NEVTES
+      WRITE(IOUT,7011) KEYA1
+C
+      IF (KTORY.EQ.1) THEN
+         WRITE(IOUT,7001) JAK,IDFF,POL(3),PTAU
+      ELSE
+         WRITE(IOUT,7004) JAK,IDFF,POL(3),PTAU
+      ENDIF
+C INITIALISATION OF TAU DECAY PACKAGE TAUOLA
+C ******************************************
+        CALL INIMAS
+        CALL INITDK
+
+
+        CALL INIPHY(0.1D0)
+      IF (KTORY.EQ.1) THEN
+         CALL DEXAY(-1,POL)
+      ELSE
+         CALL DEKAY(-1,HH)
+      ENDIF
+C-----------------------------------------------------------------------
+C          GENERATION
+C-----------------------------------------------------------------------
+      NEV=0
+      DO 300 IEV=1,NEVTES
+      NEV=NEV+1
+C RESLU INITIALISE THE LUND RECORD
+#if defined (history)
+      CALL RESLU
+#else
+#endif
+      CALL TAUFIL
+C DECAY....
+      IF (KTORY.EQ.1) THEN
+         CALL DEXAY(KTO,POL)
+      ELSE
+         CALL DEKAY(KTO,HH)
+         CALL DEKAY(KTO+10,HH)
+      ENDIF
+      CALL LUHEPC(2)
+      IF(IEV.LE.44) THEN
+       WRITE(IOUT,7002) IEV
+       IF (KTORY.NE.1) THEN
+         WRITE(IOUT,7003) HH
+       ENDIF
+C      CALL LULIST(11)
+      CALL LULIST(2)
+      ENDIF
+      IPRI=MOD(NEV,1000)
+      IF(IPRI.EQ.1) PRINT *, ' event no: ',NEV,' NEVTES: ',NEVTES
+  300 CONTINUE
+  301 CONTINUE
+C-----------------------------------------------------------------------
+C                     POSTGENERATION
+C-----------------------------------------------------------------------
+      IF (KTORY.EQ.1) THEN
+         CALL DEXAY(100,POL)
+      ELSE
+         CALL DEKAY(100,HH)
+      ENDIF
+      RETURN
+ 7001 FORMAT(//4(/1X,15(5H=====))
+     $ /,' ',     19X,'  TEST OF RAD. CORR IN ELECTRON DECAY   ',9X,1H ,
+     $ /,' ',     19X,'    TESTS OF TAU DECAY ROUTINES         ',9X,1H ,
+     $ /,' ',     19X,'    INTERFACE OF THE KORAL-Z TYPE       ',9X,1H ,
+     $  2(/,1X,15(5H=====)),
+     $ /,5X ,'JAK   =',I7  ,'  KEY DEFINING DECAY TYPE         ',9X,1H ,
+     $ /,5X ,'IDFF  =',I7  ,'  LUND IDENTIFIER FOR FIRST TAU   ',9X,1H ,
+     $ /,5X ,'POL(3)=',F7.2,'  THIRD COMPONENT OF TAU POLARIZ. ',9X,1H ,
+     $ /,5X ,'PTAU  =',F7.2,'  THIRD COMPONENT OF TAU MOM. GEV ',9X,1H ,
+     $  2(/,1X,15(5H=====))/)
+ 7002 FORMAT(///1X, '===== EVENT NO.',I4,1X,5H=====)
+ 7003 FORMAT(5X,'POLARIMETRIC VECTOR: ',
+     $       7X,'HH(1)',7X,'HH(2)',7X,'HH(3)',7X,'HH(4)',
+     $ /,    5X,'                     ', 4(1X,F11.8)   )
+ 7004 FORMAT(//4(/1X,15(5H=====))
+     $ /,'  ',     19X,'  TEST OF RAD. CORR IN ELECTRON DECAY  ',9X,1H ,
+     $ /,'  ',     19X,'    TESTS OF TAU DECAY ROUTINES        ',9X,1H ,
+     $ /,'  ',     19X,'    INTERFACE OF THE KORAL-B TYPE      ',9X,1H ,
+     $  2(/,1X,15(5H=====)),
+     $ /,5X ,'JAK   =',I7  ,'  KEY DEFINING DECAY TYPE         ',9X,1H ,
+     $ /,5X ,'IDFF  =',I7  ,'  LUND IDENTIFIER FOR FIRST TAU   ',9X,1H ,
+     $ /,5X ,'POL(3)=',F7.2,'  THIRD COMPONENT OF TAU POLARIZ. ',9X,1H ,
+     $ /,5X ,'PTAU  =',F7.2,'  THIRD COMPONENT OF TAU MOM. GEV ',9X,1H ,
+     $  2(/,1X,15(5H=====))/)
+ 7011 FORMAT(///1X, '===== TYPE OF CURRENT',I4,1X,5H=====)
+      END

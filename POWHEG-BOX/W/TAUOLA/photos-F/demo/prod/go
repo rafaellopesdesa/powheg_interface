@@ -1,0 +1,6 @@
+
+#!/bin/sh
+set -v
+../phodem.exe x>./tempora.out
+diff baza.output tempora.out
+exit 0  

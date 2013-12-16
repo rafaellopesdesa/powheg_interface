@@ -1,0 +1,6 @@
+      SUBROUTINE INITDK
+* ----------------------------------------------------------------------
+*     INITIALISATION OF TAU DECAY PARAMETERS  and routines
+*
+*     called by : KORALZ
+* ----------------------------------------------------------------------

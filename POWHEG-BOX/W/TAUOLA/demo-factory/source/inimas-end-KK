@@ -1,0 +1,9 @@
+      WRITE(iout,bxope)
+      WRITE(iout,bxtxt) ' TAUOLA Initialization SUBROUTINE INIMAS:    '
+      WRITE(iout,bxtxt) ' Adopted to read from KK                     '
+      WRITE(iout,bxINIT) amtau, 'AMTAU tau-mass             ','****','***'
+      WRITE(iout,bxINIT) amel , 'AMEL  electron-mass        ','****','***'
+      WRITE(iout,bxINIT) ammu , 'AMMU  muon-mass            ','****','***'
+      WRITE(iout,bxclo)
+
+      END

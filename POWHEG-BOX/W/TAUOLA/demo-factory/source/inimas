@@ -1,0 +1,62 @@
+*
+* MASSES USED IN TAU DECAYS
+#if defined (CePeCe)
+      AMPIZ  = 0.134964
+      AMPI   = 0.139568
+      AMRO   = 0.773
+      GAMRO  = 0.145
+*C    GAMRO  = 0.666
+      AMA1   = 1.251
+      GAMA1  = 0.599
+      AMK    = 0.493667
+      AMKZ   = 0.49772
+      AMKST  = 0.8921
+      GAMKST = 0.0513
+#elif defined (CLEO)
+      AMPIZ  = 0.134964
+      AMPI   = 0.139568
+      AMRO   = 0.773
+      GAMRO  = 0.145
+*C    GAMRO  = 0.666
+      AMA1   = 1.251
+      GAMA1  = 0.599
+      AMK    = 0.493667
+      AMKZ   = 0.49772
+      AMKST  = 0.8921
+      GAMKST = 0.0513
+C
+C
+C IN-COMING / OUT-GOING  FERMION MASSES
+!!      AMNUTA = PKORB(1,2)
+!!      AMNUE  = PKORB(1,4)
+!!      AMNUMU = PKORB(1,6)
+C
+C MASSES USED IN TAU DECAYS  Cleo settings
+!!      AMPIZ  = PKORB(1,7)
+!!      AMPI   = PKORB(1,8)
+!!      AMRO   = PKORB(1,9)
+!!      GAMRO  = PKORB(2,9)
+      AMA1   = 1.275   !! PKORB(1,10)
+      GAMA1  = 0.615   !! PKORB(2,10)
+!!      AMK    = PKORB(1,11)
+!!      AMKZ   = PKORB(1,12)
+!!      AMKST  = PKORB(1,13)
+!!      GAMKST = PKORB(2,13)
+C
+#elif defined (ALEPH)
+      AMPIZ  = 0.134964
+      AMPI   = 0.139568
+      AMRO   = 0.7714
+      GAMRO  = 0.153
+cam   AMRO   = 0.773
+cam   GAMRO  = 0.145
+      AMA1   = 1.251! PMAS(LUCOMP(ia1),1)       ! AMA1   = 1.251
+      GAMA1  = 0.599! PMAS(LUCOMP(ia1),2)       ! GAMA1  = 0.599
+      print *,'INIMAS a1 mass= ',ama1,gama1
+      AMK    = 0.493667
+      AMKZ   = 0.49772
+      AMKST  = 0.8921
+      GAMKST = 0.0513
+#else
+#endif
+

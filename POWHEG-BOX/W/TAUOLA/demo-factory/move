@@ -1,0 +1,9 @@
+#!/bin/sh
+set -v
+cp             prod/Tauface.F              ../tauola-F/tauface-KK-F/Tauface.F;
+cp             prod/tauola_photos_ini.F    ../tauola-F/jetset-F/tauola_photos_ini.F;
+cp             prod/taumain.F              ../tauola-F/standalone-F/taumain.F;
+exit 0  
+
+
+

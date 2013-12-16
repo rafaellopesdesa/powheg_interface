@@ -1,0 +1,50 @@
+#!/bin/sh
+set -v
+cp  ./source/Tauface.A                   ./prod/Tauface.F;
+cat ./source/initdk-begin-KK          >> ./prod/Tauface.F;
+cat ./source/initdk                   >> ./prod/Tauface.F;
+cat ./source/initdk-end-KK            >> ./prod/Tauface.F;
+cat ./source/iniphy                   >> ./prod/Tauface.F;
+cat ./source/inimas-begin-KK          >> ./prod/Tauface.F;
+cat ./source/inimas                   >> ./prod/Tauface.F;
+cat ./source/inimas-end-KK            >> ./prod/Tauface.F;
+cat ./source/choice                   >> ./prod/Tauface.F;
+cat ./source/dcdmas                   >> ./prod/Tauface.F;
+
+cp  ./source/taumain.A                   ./prod/taumain.F;
+cat ./source/choice                   >> ./prod/taumain.F;
+cat ./source/initdk-begin             >> ./prod/taumain.F;
+cat ./source/initdk                   >> ./prod/taumain.F;
+cat ./source/initdk-end               >> ./prod/taumain.F;
+cat ./source/dcdmas                   >> ./prod/taumain.F;
+cat ./source/iniphy                   >> ./prod/taumain.F;
+cat ./source/inimas-begin             >> ./prod/taumain.F;
+cat ./source/inimas                   >> ./prod/taumain.F;
+cat ./source/inimas-end               >> ./prod/taumain.F;
+cat ./source/taufil                   >> ./prod/taumain.F;
+cat ./source/dilogy                   >> ./prod/taumain.F;
+
+cp   ./source/tauola_photos_ini.A        ./prod/tauola_photos_ini.F;
+cat  ./source/choice                  >> ./prod/tauola_photos_ini.F;
+cat  ./source/initdk-begin            >> ./prod/tauola_photos_ini.F;
+cat  ./source/initdk                  >> ./prod/tauola_photos_ini.F;
+cat  ./source/initdk-end-jetset       >> ./prod/tauola_photos_ini.F;
+cat  ./source/dcdmas                  >> ./prod/tauola_photos_ini.F;
+cat  ./source/iniphy-jetset           >> ./prod/tauola_photos_ini.F;
+cat  ./source/inimas-begin-jetset     >> ./prod/tauola_photos_ini.F;
+cat  ./source/inimas                  >> ./prod/tauola_photos_ini.F;
+cat  ./source/inimas-end              >> ./prod/tauola_photos_ini.F;
+cat  ./source/bostdq                  >> ./prod/tauola_photos_ini.F;
+cat  ./source/dilogy                  >> ./prod/tauola_photos_ini.F;
+
+diff -ib ./back/Tauface.F                  ./prod/Tauface.F;
+diff -ib ./back/taumain.F                  ./prod/taumain.F;
+diff -ib ./back/tauola_photos_ini.F        ./prod/tauola_photos_ini.F;
+exit 0
+cp             prod/Tauface.F              ../tauola-F/tauface-KK-F/Tauface.F;
+cp             prod/tauola_photos_ini.F    ../tauola-F/jetset-F/tauola_photos_ini.F;
+cp             prod/taumain.F              ../tauola-F/june-F/taumain.F;
+exit 0  
+
+
+

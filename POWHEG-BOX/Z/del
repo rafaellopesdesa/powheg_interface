@@ -1,0 +1,15 @@
+rm -rf FlavRegList
+rm -rf pwhg_checklimits
+rm -rf pwgbtlgrid.top
+rm -rf pwgxgrid.dat
+rm -rf pwggrid.dat
+rm -rf pwgNLO.top
+rm -rf pwgstat.dat
+rm -rf pwgborngrid.top
+rm -rf pwgubound.dat
+rm -rf pwghistnorms.top
+rm -rf pwgpwhgalone-output.top
+rm -rf pwgevents.lhe
+rm -rf pwgcounters.dat
+rm -rf gmon.out
+rm -rf del

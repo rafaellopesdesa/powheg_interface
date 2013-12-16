@@ -1,0 +1,15 @@
+TAUOLA.daily_temp.tar.gz created: 
+Mon May  4 22:31:21 EST 2009
+**********************************
+Output from svn info: 
+Path: .
+URL: svn+ssh://ndavidson@kasztan.ifj.edu.pl/home/theory/svnroot/camtoph/TAUOLA/trunk
+Repository Root: svn+ssh://ndavidson@kasztan.ifj.edu.pl/home/theory/svnroot/camtoph/TAUOLA
+Repository UUID: ee99ed71-ba40-4df0-a6a5-a26bd347ed93
+Revision: 50
+Node Kind: directory
+Schedule: normal
+Last Changed Author: ndavidson
+Last Changed Rev: 50
+Last Changed Date: 2009-05-04 22:29:19 +1000 (Mon, 04 May 2009)
+
